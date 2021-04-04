@@ -11,32 +11,32 @@ A Python script that displays your [Plex](https://www.plex.tv) status on [Discor
 
 ## Configuration
 
-Add your configuration(s) into the `plexConfigs` list on line 30.
+Create a config.json file in the same directory as the python file.
 
 #### Example
 
-```python
-plexConfigs = [
-	plexConfig(serverName = "ABC", username = "xyz", password = "0tYD4UIC4Tb8X0nt"),
-	plexConfig(serverName = "DEF", username = "pqr@pqr.pqr", token = "70iU3GZrI54S76Tn", listenForUser = "xyz"),
-	plexConfig(serverName = "GHI", username = "xyz", password = "0tYD4UIC4Tb8X0nt", blacklistedLibraries = ["TV Shows", "Music"])
-]
-```
+```json
+{
+  "server_name": "myserver",
+  "username": "myuser",
+  "password": "mypass"
+}
+``` 
 
 #### Parameters
 
-* `serverName` - Name of the Plex Media Server to connect to.
+* `server_name` - Name of the Plex Media Server to connect to.
 * `username` - Your account's username or e-mail.
 * `password` (not required if `token` is set) - The password associated with the above account.
 * `token` (not required if `password` is set) - A [X-Plex-Token](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token) associated with the above account. In some cases, `myPlexAccessToken` from Plex Web App's HTML5 Local Storage must be used. To retrieve this token in Google Chrome, open Plex Web App, press F12, go to "Application", expand "Local Storage" and select the relevant entry. Ignores `password` if set.
-* `listenForUser` (optional) - The script will respond to alerts originating only from this username. Defaults to `username` if not set.
-* `blacklistedLibraries` (list, optional) - Alerts originating from blacklisted libraries are ignored.
-* `whitelistedLibraries` (list, optional) - If set, alerts originating from libraries that are not in the whitelist are ignored.
+* `listen_for_user` (optional) - The script will respond to alerts originating only from this username. Defaults to `username` if not set.
+* `blacklisted_libraries` (list, optional) - Alerts originating from blacklisted libraries are ignored.
+* `whitelisted_libraries` (list, optional) - If set, alerts originating from libraries that are not in the whitelist are ignored.
 
 ### Other Variables
 
-* Line 16: `extraLogging` - The script outputs more information if this is set to `True`.
-* Line 17: `timeRemaining` - Set this to `True` to display time remaining instead of time elapsed while media is playing.
+* Line 16: `extra_logging` - The script outputs more information if this is set to `True`.
+* Line 17: `time_remaining` - Set this to `True` to display time remaining instead of time elapsed while media is playing.
 
 ## License
 

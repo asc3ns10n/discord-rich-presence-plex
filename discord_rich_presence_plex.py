@@ -12,9 +12,6 @@ import time
 
 import plexapi.myplex
 
-#pylint: disable=too-many-instance-attributes
-#pylint: disable=too-many-arguments
-
 class PlexConfig:
 
     extra_logging = True
@@ -77,9 +74,7 @@ class DiscordRichPresence:
     def write(self, op_code, payload):
         payload = json.dumps(payload)
         self.child.log("[WRITE] " + str(payload))
-        data = self.pipe_writer.write(
-            struct.pack("<ii", op_code, len(payload)) + payload.encode("utf-8")
-        )
+        self.pipe_writer.write(struct.pack("<ii", op_code, len(payload)) + payload.encode("utf-8"))
 
     async def handshake(self):
         try:
@@ -311,7 +306,7 @@ class DiscordRichPresencePlex(DiscordRichPresence):
                 session_data = data["PlaySessionStateNotification"][0]
                 state = session_data["state"]
                 session_key = int(session_data["sessionKey"])
-                rating_key = int(session_data["rating_key"])
+                rating_key = int(session_data["ratingKey"])
                 view_offset = int(session_data["viewOffset"])
                 self.log(
                     "Received Update: "
@@ -389,13 +384,13 @@ class DiscordRichPresencePlex(DiscordRichPresence):
                         self.log(
                             str(session)
                             + ", Session Key: "
-                            + color_text(session.session_key, "yellow")
+                            + color_text(session.sessionKey, "yellow")
                             + ", Users: "
                             + color_text(session.usernames, "yellow").replace("'", '"'),
                             extra=True,
                         )
                         session_found = False
-                        if session.session_key == session_key:
+                        if session.sessionKey == session_key:
                             session_found = True
                             self.log("Session found", "green", True)
                             if (
@@ -441,30 +436,17 @@ class DiscordRichPresencePlex(DiscordRichPresence):
                     rating_key,
                 )
                 media_type = metadata.type
-                if state != "playing":
-                    extra = (
-                        seconds_to_text(view_offset / 1000, ":")
-                        + "/"
-                        + seconds_to_text(metadata.duration / 1000, ":")
-                    )
-                else:
-                    extra = seconds_to_text(metadata.duration / 1000)
                 if media_type == "movie":
                     title = metadata.title + " (" + str(metadata.year) + ")"
-                    extra = (
-                        extra
-                        + " · "
-                        + ", ".join([genre.tag for genre in metadata.genres[:3]])
-                    )
+                    extra = ", ".join([genre.tag for genre in metadata.genres[:3]])
                     large_text = "Watching a Movie"
                 elif media_type == "episode":
                     title = metadata.grandparentTitle
                     extra = (
-                        extra
-                        + " · S"
-                        + str(metadata.parentIndex)
-                        + " · E"
-                        + str(metadata.index)
+                        "S"
+                        + str(metadata.parentIndex).zfill(2)
+                        + "E"
+                        + str(metadata.index).zfill(2)
                         + " - "
                         + metadata.title
                     )
@@ -483,6 +465,8 @@ class DiscordRichPresencePlex(DiscordRichPresence):
                         True,
                     )
                     return
+                title = title[0:125] + "..." if len(title) > 128 else title
+                extra = extra[0:125] + "..." if len(extra) > 128 else extra
                 activity = {
                     "details": title,
                     "state": extra,

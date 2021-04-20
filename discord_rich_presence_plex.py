@@ -533,9 +533,10 @@ def seconds_to_text(seconds, joiner=""):
 with open('config.json') as f:
     config_data = json.load(f)
 
-plex_configs = [
-    PlexConfig(**config_data)
-]
+plex_configs = []
+
+for server in config_data:
+    plex_configs.append(PlexConfig(**server))
 
 if len(plex_configs) == 0:
     print("Error: plex_configs list is empty")

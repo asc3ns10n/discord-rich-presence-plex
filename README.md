@@ -16,11 +16,18 @@ Create a config.json file in the same directory as the python file.
 #### Example
 
 ```json
-{
-  "server_name": "myserver",
-  "username": "myuser",
-  "password": "mypass"
-}
+[
+    {
+        "server_name":"myserver1",
+        "username":"myuser",
+        "token":"mytoken"
+    },
+    {
+        "server_name":"myserver2",
+        "username":"myuser",
+        "token":"mytoken"
+    }
+]
 ``` 
 
 #### Parameters
